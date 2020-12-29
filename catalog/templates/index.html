@@ -16,4 +16,5 @@
     <li><strong>Authors:</strong> {{ num_authors }}</li>
     <li><strong>Fiction Books:</strong> {{ num_fiction }}</li>
   </ul>
+  <p>You have visited this page {{ num_visits }} time{% if num_visits > 1 %}s{% endif %}.</p>
 {% endblock %}

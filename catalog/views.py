@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 
 from catalog.models import Book, Author, BookInstance, Genre
 from catalog.forms import RenewBookForm
@@ -109,3 +111,35 @@ def renew_book_librarian(request, pk):
     }
 
     return render(request, 'book_renew_librarian.html', context)
+
+class AuthorCreate(LoginRequiredMixin, CreateView, PermissionRequiredMixin):
+    permission_required = 'catalog.can_mark_returned'
+    model = Author
+    fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
+    initial = {'date_of_death': '11/06/2020'}
+
+class AuthorUpdate(LoginRequiredMixin, UpdateView, PermissionRequiredMixin):
+    permission_required = 'catalog.can_mark_returned'
+    model = Author
+    fields = '__all__'
+
+class AuthorDelete(LoginRequiredMixin, DeleteView, PermissionRequiredMixin):
+    permission_required = 'catalog.can_mark_returned'
+    model = Author
+    success_url = reverse_lazy('authors')
+
+class BookCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'catalog.can_mark_returned'
+    model = Book
+    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
+
+class BookUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'catalog.can_mark_returned'
+    model = Book
+    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
+
+
+class BookDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'catalog.can_mark_returned'
+    model = Book
+    success_url = reverse_lazy('books')

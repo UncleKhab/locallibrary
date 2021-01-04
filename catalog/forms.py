@@ -3,6 +3,8 @@ import datetime
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.forms import ModelForm
+from catalog.models import BookInstance
 
 class RenewBookForm(forms.Form):
     renewal_date = forms.DateField(help_text="enter a date between now and 4 weeks (default 3 weeks).")
@@ -19,3 +21,8 @@ class RenewBookForm(forms.Form):
         
         return data
 
+
+class RenewBookModelForm(ModelForm):
+    class Meta:
+        model = BookInstance
+        fields = ['due_back']
